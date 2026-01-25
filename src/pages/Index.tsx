@@ -37,8 +37,8 @@ export default function Index() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 container-xl pt-24">
-          <div className="max-w-2xl">
+        <div className="relative z-10 container-xl !mx-12 pt-24">
+          <div className="max-w-2xl text-left">
             <span className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/20 to-rose-500/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium mb-6 animate-fade-up border border-amber-500/30">
               New Collection 2026
             </span>
@@ -50,7 +50,7 @@ export default function Index() {
             <p className="text-lg text-muted-foreground mb-8 max-w-lg animate-fade-up" style={{ animationDelay: '0.2s' }}>
               Ανακαλύψτε μοναδικά έπιπλα και διακοσμητικά που θα μετατρέψουν το σπίτι σας σε έναν χώρο έμπνευσης.
             </p>
-            <div className="flex flex-wrap gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
+            <div className="flex flex-wrap justify-start gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
               <Button asChild variant="hero" size="xl" className="bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-700 hover:to-rose-700 border-0 text-white">
                 <Link to="/category/καθιστικό">
                   Explore Collection

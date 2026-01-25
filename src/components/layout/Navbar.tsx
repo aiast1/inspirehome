@@ -96,7 +96,7 @@ export function Navbar() {
           path: '/category/καθιστικό',
           items: [
             { label: 'Sofas', path: '/category/καναπέδες' },
-            { label: 'Corner Sofas', path: '/search?q=γωνιακοί' },
+
             { label: 'Armchairs', path: '/category/πολυθρόνες' },
             { label: 'Coffee Tables', path: '/category/τραπεζάκια-σαλονιού' },
             { label: 'Side Tables', path: '/search?q=βοηθητικά τραπεζάκια' },
