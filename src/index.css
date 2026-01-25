@@ -1,0 +1,282 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* InspireHome Design System - Liquid Glass Theme */
+
+@layer base {
+  :root {
+    /* Core white/neutral palette - IKEA inspired */
+    --background: 0 0% 99%;
+    --foreground: 220 15% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
+
+    /* Primary - Warm charcoal */
+    --primary: 220 12% 20%;
+    --primary-foreground: 0 0% 98%;
+
+    /* Secondary - Soft warm beige */
+    --secondary: 35 30% 95%;
+    --secondary-foreground: 220 12% 20%;
+
+    /* Muted - Light neutral */
+    --muted: 35 15% 95%;
+    --muted-foreground: 220 10% 45%;
+
+    /* Accent - Warm taupe */
+    --accent: 35 20% 90%;
+    --accent-foreground: 220 12% 20%;
+
+    /* Destructive */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Borders and inputs */
+    --border: 35 15% 90%;
+    --input: 35 15% 90%;
+    --ring: 220 12% 20%;
+
+    --radius: 1rem;
+
+    /* Glass effect tokens */
+    --glass-blur: 20px;
+    --glass-bg: 0 0% 100%;
+    --glass-opacity: 0.75;
+    --glass-border: 0 0% 100%;
+    --glass-shadow: 220 15% 15%;
+
+    /* Gradients */
+    --gradient-glass: linear-gradient(135deg,
+        hsl(0 0% 100% / 0.9) 0%,
+        hsl(0 0% 100% / 0.6) 100%);
+    --gradient-hero: linear-gradient(180deg,
+        hsl(35 30% 97%) 0%,
+        hsl(0 0% 100%) 100%);
+
+    /* Sidebar tokens */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 220 15% 25%;
+    --sidebar-primary: 220 12% 20%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 35 20% 95%;
+    --sidebar-accent-foreground: 220 12% 20%;
+    --sidebar-border: 35 15% 90%;
+    --sidebar-ring: 220 12% 20%;
+  }
+
+  .dark {
+    --background: 220 15% 8%;
+    --foreground: 0 0% 95%;
+
+    --card: 220 15% 12%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 220 15% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 0 0% 95%;
+    --primary-foreground: 220 15% 10%;
+
+    --secondary: 220 12% 18%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 220 12% 18%;
+    --muted-foreground: 220 8% 60%;
+
+    --accent: 220 12% 20%;
+    --accent-foreground: 0 0% 95%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 12% 20%;
+    --input: 220 12% 20%;
+    --ring: 0 0% 80%;
+
+    --glass-bg: 220 15% 10%;
+    --glass-opacity: 0.85;
+    --glass-border: 220 12% 25%;
+    --glass-shadow: 0 0% 0%;
+
+    --sidebar-background: 220 15% 10%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 0 0% 95%;
+    --sidebar-primary-foreground: 220 15% 10%;
+    --sidebar-accent: 220 12% 18%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 220 12% 18%;
+    --sidebar-ring: 0 0% 80%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+
+  /* Liquid Glass effect - Apple Inspired */
+  .glass {
+    background: hsl(var(--glass-bg) / var(--glass-opacity));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 4px 30px rgba(0, 0, 0, 0.05),
+      inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  }
+
+  .glass-strong {
+    background: hsl(var(--glass-bg) / 0.85);
+    backdrop-filter: blur(35px) saturate(200%);
+    -webkit-backdrop-filter: blur(35px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.1),
+      inset 0 1px 1px rgba(255, 255, 255, 0.4),
+      inset 0 -1px 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .glass-liquid {
+    position: relative;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(30px) saturate(210%);
+    -webkit-backdrop-filter: blur(30px) saturate(210%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+      0 8px 32px 0 rgba(0, 0, 0, 0.15),
+      inset 0 0 80px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .glass-interactive::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.4) 0%,
+        transparent 40%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+  }
+
+  .glass-interactive:hover::before {
+    opacity: 1;
+  }
+
+  /* High-end Specular Border Highlight */
+  .glass-specular {
+    position: relative;
+  }
+
+  .glass-specular::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0.05) 40%,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(255, 255, 255, 0.05) 60%,
+        rgba(255, 255, 255, 0.3) 100%);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .glass-subtle {
+    background: hsl(var(--glass-bg) / 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  }
+}
+
+@layer utilities {
+
+  /* Smooth hover transitions */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px hsl(var(--glass-shadow) / 0.12);
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg,
+        hsl(220 12% 20%) 0%,
+        hsl(220 10% 40%) 100%);
+  }
+
+  /* Animate on scroll fade in */
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Smooth image hover */
+  .img-hover {
+    @apply transition-transform duration-500 ease-out;
+  }
+
+  .img-hover:hover {
+    transform: scale(1.05);
+  }
+
+  /* Underline animation */
+  .underline-animate {
+    @apply relative;
+  }
+
+  .underline-animate::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-[1px] bg-foreground transition-all duration-300;
+  }
+
+  .underline-animate:hover::after {
+    @apply w-full;
+  }
+
+  /* Container max widths */
+  .container-xl {
+    @apply max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
