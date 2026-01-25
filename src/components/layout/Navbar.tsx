@@ -96,10 +96,7 @@ export function Navbar() {
           path: '/category/καθιστικό',
           items: [
             { label: 'Sofas', path: '/category/καναπέδες' },
-            { label: '2-Seater Sofas', path: '/search?q=διθέσιοι' },
-            { label: '3-Seater Sofas', path: '/search?q=τριθέσιοι' },
             { label: 'Corner Sofas', path: '/search?q=γωνιακοί' },
-            { label: 'Sofa Beds', path: '/search?q=καναπέδες κρεβάτι' },
             { label: 'Armchairs', path: '/category/πολυθρόνες' },
             { label: 'Coffee Tables', path: '/category/τραπεζάκια-σαλονιού' },
             { label: 'Side Tables', path: '/search?q=βοηθητικά τραπεζάκια' },
@@ -113,7 +110,6 @@ export function Navbar() {
           items: [
             { label: 'Dining Tables', path: '/category/τραπέζια' },
             { label: 'Dining Chairs', path: '/category/καρέκλες' },
-            { label: 'Bar Stools', path: '/category/σκαμπό-μπαρ' },
             { label: 'Sideboards', path: '/category/μπουφέδες' },
             { label: 'Display Cabinets', path: '/category/βιτρίνες' },
           ]
@@ -123,9 +119,6 @@ export function Navbar() {
           path: '/category/υπνοδωμάτιο',
           items: [
             { label: 'Beds', path: '/category/κρεβάτια' },
-            { label: 'Single Beds', path: '/search?q=μονά κρεβάτια' },
-            { label: 'Double Beds', path: '/search?q=διπλά κρεβάτια' },
-            { label: 'King Size Beds', path: '/search?q=υπέρδιπλα' },
             { label: 'Nightstands', path: '/category/κομοδίνα' },
             { label: 'Dressers', path: '/category/συρταριέρες' },
             { label: 'Wardrobes', path: '/category/ντουλάπες' },
@@ -139,15 +132,12 @@ export function Navbar() {
             { label: 'Desks', path: '/category/γραφεία' },
             { label: 'Office Chairs', path: '/category/καρέκλες-γραφείου' },
             { label: 'Bookcases', path: '/category/βιβλιοθήκες' },
-            { label: 'Filing Cabinets', path: '/search?q=αρχειοθέτηση' },
           ]
         },
         {
           title: 'Storage',
           path: '/search?q=αποθήκευση',
           items: [
-            { label: 'Cabinets', path: '/category/ντουλάπια' },
-            { label: 'Shelving Units', path: '/category/ραφιέρες' },
             { label: 'Shoe Racks', path: '/category/παπουτσοθήκες' },
             { label: 'Storage Benches', path: '/category/μπαούλα' },
           ]
@@ -160,15 +150,6 @@ export function Navbar() {
             { label: 'Outdoor Chairs', path: '/category/καρέκλες-κήπου' },
             { label: 'Outdoor Tables', path: '/category/τραπέζια-κήπου' },
             { label: 'Sunbeds', path: '/category/ξαπλώστρες' },
-          ]
-        },
-        {
-          title: 'Kids',
-          path: '/category/παιδικό',
-          items: [
-            { label: 'Kids Beds', path: '/search?q=παιδικά κρεβάτια' },
-            { label: 'Kids Desks', path: '/search?q=παιδικά γραφεία' },
-            { label: 'Kids Storage', path: '/search?q=παιδική αποθήκευση' },
           ]
         }
       ]
@@ -306,47 +287,20 @@ export function Navbar() {
                       item.type === 'mega' ? "p-10" : "p-2"
                     )}>
                       {item.type === 'mega' ? (
-                        item.id === 'decor' ? (
-                          <div className="grid grid-cols-3 gap-12">
-                            <div className="space-y-6">
-                              {[item.columns![0], item.columns![1]].map((col, idx) => (
-                                <div key={idx} className="space-y-4">
-                                  <Link to={col.path} className="font-bold text-base hover:text-amber-600 transition-colors block pb-1 border-b border-foreground/5">{col.title}</Link>
-                                  <div className="space-y-2">
-                                    {col.items.map((sub) => (
-                                      <Link key={sub.label} to={sub.path} className="block text-sm text-muted-foreground hover:text-foreground transition-colors hover:translate-x-1 duration-300">{sub.label}</Link>
-                                    ))}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                            <div className="space-y-6">
-                              {[item.columns![2], item.columns![3]].map((col, idx) => (
-                                <div key={idx} className="space-y-4">
-                                  <Link to={col.path} className="font-bold text-base hover:text-amber-600 transition-colors block pb-1 border-b border-foreground/5">{col.title}</Link>
-                                  <div className="space-y-2">
-                                    {col.items.map((sub) => (
-                                      <Link key={sub.label} to={sub.path} className="block text-sm text-muted-foreground hover:text-foreground transition-colors hover:translate-x-1 duration-300">{sub.label}</Link>
-                                    ))}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="grid grid-cols-4 gap-12">
-                            {item.columns!.map((col) => (
-                              <div key={col.title} className="space-y-4">
-                                <Link to={col.path} className="font-bold text-base hover:text-amber-600 transition-colors block pb-1 border-b border-foreground/5">{col.title}</Link>
+                        <div className="flex gap-16">
+                          {item.columns!.map((col) => (
+                            <div key={col.title} className="space-y-4">
+                              <Link to={col.path} className="font-bold text-base hover:text-amber-600 transition-colors block pb-1 border-b border-foreground/5 whitespace-nowrap">{col.title}</Link>
+                              {col.items.length > 0 && (
                                 <div className="space-y-2">
                                   {col.items.map((sub) => (
-                                    <Link key={sub.label} to={sub.path} className="block text-sm text-muted-foreground hover:text-foreground transition-colors hover:translate-x-1 duration-300">{sub.label}</Link>
+                                    <Link key={sub.label} to={sub.path} className="block text-sm text-muted-foreground hover:text-foreground transition-colors hover:translate-x-1 duration-300 whitespace-nowrap">{sub.label}</Link>
                                   ))}
                                 </div>
-                              </div>
-                            ))}
-                          </div>
-                        )
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       ) : (
                         <div className="flex flex-col gap-0.5">
                           {item.items!.map((sub) => (
