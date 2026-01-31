@@ -29,7 +29,7 @@ export default function AboutPage() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-white/10 border border-amber-200/50 backdrop-blur-sm mb-8 animate-fade-up shadow-sm hover:shadow-md transition-all cursor-default">
             <Sparkles className="h-4 w-4 text-amber-500 animate-spin-slow" />
             <span className="text-sm font-medium bg-gradient-to-r from-amber-600 to-rose-600 bg-clip-text text-transparent flex items-center gap-2">
-              inspirehome <span className="text-[10px] uppercase font-bold tracking-widest pl-1">Καπλαντζης</span>
+              inspirehome <span className="text-[10px] uppercase font-bold tracking-widest pl-1">Καπλαντζής</span>
             </span>
           </div>
 
@@ -106,10 +106,10 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Μια Διαδρομή <span className="text-amber-600">Εξέλιξης</span> & <span className="text-rose-600">Έμπνευσης</span></h2>
               <p className="text-muted-foreground leading-relaxed text-lg mb-6">
-                Το <strong>inspirehome <small className="text-[10px] ml-1 uppercase font-bold">Καμπλατζης</small></strong> δημιουργήθηκε από ένα όραμα: να φέρουμε το ποιοτικό, καλοσχεδιασμένο έπιπλο σε κάθε ελληνικό σπίτι, ξεκινώντας από την ακριτική Σάμο.
+                Το <strong>inspirehome <small className="text-[10px] ml-1 uppercase font-bold">Καπλαντζής</small></strong> δημιουργήθηκε από ένα όραμα: να φέρουμε το ποιοτικό, καλοσχεδιασμένο έπιπλο σε κάθε ελληνικό σπίτι, ξεκινώντας από την ακριτική Σάμο.
               </p>
               <p className="text-muted-foreground leading-relaxed text-lg">
-                Υπό τη διεύθυνση του **Βαγγέλη Καπλαντζή**, εξελιχθήκαμε από ένα τοπικό κατάστημα σε έναν προορισμό design. Πιστεύουμε ότι το σπίτι σας δεν είναι απλά τοίχοι, αλλά το σκηνικό της ζωής σας.
+                Υπό τη διεύθυνση του Βαγγέλη Καπλαντζής, εξελιχθήκαμε από ένα τοπικό κατάστημα σε έναν προορισμό design. Πιστεύουμε ότι το σπίτι σας δεν είναι απλά τοίχοι, αλλά το σκηνικό της ζωής σας.
               </p>
             </div>
 
