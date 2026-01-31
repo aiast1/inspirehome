@@ -29,7 +29,7 @@ export default function AboutPage() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-white/10 border border-amber-200/50 backdrop-blur-sm mb-8 animate-fade-up shadow-sm hover:shadow-md transition-all cursor-default">
             <Sparkles className="h-4 w-4 text-amber-500 animate-spin-slow" />
             <span className="text-sm font-medium bg-gradient-to-r from-amber-600 to-rose-600 bg-clip-text text-transparent flex items-center gap-2">
-              inspirehome <span className="text-[10px] uppercase font-bold tracking-widest pl-1">Καμπλατζης</span>
+              inspirehome <span className="text-[10px] uppercase font-bold tracking-widest pl-1">Καπλαντζης</span>
             </span>
           </div>
 
