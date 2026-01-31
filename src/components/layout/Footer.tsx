@@ -122,7 +122,7 @@ export function Footer() {
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground flex flex-wrap items-center gap-2">
             © {currentYear} inspire<span className="font-light">home</span>
-            <span className="text-[10px] uppercase font-bold tracking-widest pl-1">Καμπλατζης</span>
+            <span className="text-[10px] uppercase font-bold tracking-widest pl-1">Καπλαντζης</span>
             . All rights reserved.
           </p>
           <div className="flex gap-6">
