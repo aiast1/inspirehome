@@ -239,7 +239,7 @@ export function Navbar() {
           <img src={logo} alt="Logo" className="h-9 w-auto object-contain transition-transform duration-500 group-hover:scale-110" />
           <span className="text-xl font-bold tracking-tighter flex items-baseline gap-1.5 overflow-hidden">
             <span className="bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">inspire<span className="font-light">home</span></span>
-            <span className="text-[10px] font-black text-muted-foreground uppercase opacity-40">Καμπλατζης</span>
+            <span className="text-[10px] font-black text-muted-foreground uppercase opacity-40">Καπλαντζης</span>
           </span>
         </Link>
 
