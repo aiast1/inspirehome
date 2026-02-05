@@ -1,13 +1,8 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useProducts } from '@/contexts/ProductContext';
 import {
-  fetchOverview, fetchPages, fetchSources, fetchCountries, fetchDevices,
-  type AnalyticsOverview, type PageData, type SourceData, type CountryData, type DeviceData,
-} from '@/lib/analyticsApi';
-import {
-  Package, FolderTree, ArrowRight, Eye, Users, Activity,
-  Clock, TrendingDown, AlertTriangle, Euro, Percent, Boxes, Globe,
+  Package, FolderTree, ArrowRight, AlertTriangle, Euro, Percent, Boxes, ExternalLink, BarChart3,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -15,28 +10,12 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, PieChart, Pie, Cell, AreaChart, Area, Label } from 'recharts';
-
-// ─── Date range helpers ──────────────────────────────────────────
-const DATE_RANGES = [
-  { label: '7d', startDate: '7daysAgo', endDate: 'today' },
-  { label: '30d', startDate: '30daysAgo', endDate: 'today' },
-  { label: '90d', startDate: '90daysAgo', endDate: 'today' },
-] as const;
 
 // ─── Chart configs ───────────────────────────────────────────────
 const categoryChartConfig: ChartConfig = {
   count: { label: 'Products', color: '#f59e0b' },
-};
-
-const pagesChartConfig: ChartConfig = {
-  views: { label: 'Page Views', color: '#f59e0b' },
-};
-
-const countriesChartConfig: ChartConfig = {
-  sessions: { label: 'Sessions', color: '#3b82f6' },
 };
 
 const priceChartConfig: ChartConfig = {
@@ -65,57 +44,20 @@ const PRICE_BUCKETS = [
 
 // ─── Component ───────────────────────────────────────────────────
 export default function AdminDashboard() {
-  const { products, categories, isLoading: productsLoading } = useProducts();
+  const { products, categories, isLoading } = useProducts();
 
-  // GA4 state
-  const [dateRange, setDateRange] = useState(1); // index into DATE_RANGES (default 30d)
-  const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
-  const [pages, setPages] = useState<PageData[]>([]);
-  const [sources, setSources] = useState<SourceData[]>([]);
-  const [countries, setCountries] = useState<CountryData[]>([]);
-  const [devices, setDevices] = useState<DeviceData[]>([]);
-  const [gaLoading, setGaLoading] = useState(true);
-  const [gaError, setGaError] = useState<string | null>(null);
-
-  const loadAnalytics = useCallback(async (rangeIdx: number) => {
-    setGaLoading(true);
-    setGaError(null);
-    const { startDate, endDate } = DATE_RANGES[rangeIdx];
-    try {
-      const [ov, pg, sr, co, dv] = await Promise.all([
-        fetchOverview(startDate, endDate),
-        fetchPages(startDate, endDate),
-        fetchSources(startDate, endDate),
-        fetchCountries(startDate, endDate),
-        fetchDevices(startDate, endDate),
-      ]);
-      setOverview(ov);
-      setPages(pg);
-      setSources(sr);
-      setCountries(co);
-      setDevices(dv);
-    } catch (err: any) {
-      setGaError(err.message === 'NO_GA4' ? 'not_configured' : err.message);
-    } finally {
-      setGaLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadAnalytics(dateRange);
-  }, [dateRange, loadAnalytics]);
-
-  // ─── Product analytics (client-side) ──────────────────────────
-  const productStats = useMemo(() => {
+  const stats = useMemo(() => {
     const total = products.length;
     const libertaCount = products.filter(p => p.id.startsWith('liberta-')).length;
     const otherCount = total - libertaCount;
     const inStockCount = products.filter(p => p.inStock).length;
+    const outOfStockCount = total - inStockCount;
     const lowStockCount = products.filter(p => p.inStock && p.stock > 0 && p.stock <= 5).length;
     const onSaleCount = products.filter(p => p.salePrice && p.salePrice < p.price).length;
 
     const prices = products.filter(p => p.price > 0).map(p => p.salePrice || p.price);
     const avgPrice = prices.length > 0 ? prices.reduce((a, b) => a + b, 0) / prices.length : 0;
+    const inventoryValue = products.reduce((sum, p) => sum + (p.salePrice || p.price) * p.stock, 0);
 
     // Category distribution (top 10)
     const catMap = new Map<string, number>();
@@ -162,34 +104,21 @@ export default function AdminDashboard() {
       }));
 
     return {
-      total, libertaCount, otherCount, inStockCount, lowStockCount, onSaleCount, avgPrice,
-      categoryDistribution, sourceBreakdown, priceDistribution, stockBuckets, lowStockProducts,
+      total, libertaCount, otherCount, inStockCount, outOfStockCount, lowStockCount,
+      onSaleCount, avgPrice, inventoryValue, categoryDistribution, sourceBreakdown,
+      priceDistribution, stockBuckets, lowStockProducts,
     };
   }, [products]);
 
-  // Dynamic chart configs for pie charts
+  // Dynamic chart config for source pie
   const sourceChartConfig: ChartConfig = useMemo(() =>
-    productStats.sourceBreakdown.reduce((acc, s, i) => ({
+    stats.sourceBreakdown.reduce((acc, s, i) => ({
       ...acc,
       [s.name]: { label: s.name, color: PIE_COLORS[i] },
     }), {} as ChartConfig),
-  [productStats.sourceBreakdown]);
+  [stats.sourceBreakdown]);
 
-  const sourcesGaConfig: ChartConfig = useMemo(() =>
-    sources.reduce((acc, s, i) => ({
-      ...acc,
-      [s.source]: { label: s.source, color: PIE_COLORS[i % PIE_COLORS.length] },
-    }), {} as ChartConfig),
-  [sources]);
-
-  const devicesGaConfig: ChartConfig = useMemo(() =>
-    devices.reduce((acc, d, i) => ({
-      ...acc,
-      [d.device]: { label: d.device, color: PIE_COLORS[i % PIE_COLORS.length] },
-    }), {} as ChartConfig),
-  [devices]);
-
-  if (productsLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600" />
@@ -197,218 +126,59 @@ export default function AdminDashboard() {
     );
   }
 
-  const gaNotConfigured = gaError === 'not_configured';
-
   return (
     <div className="space-y-6">
-      {/* ─── Header + Date Range ────────────────────────────────── */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Site analytics & product catalog overview</p>
-        </div>
-        <div className="flex gap-1 rounded-lg bg-muted p-1">
-          {DATE_RANGES.map((r, i) => (
-            <button
-              key={r.label}
-              onClick={() => setDateRange(i)}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                dateRange === i
-                  ? 'bg-background shadow-sm text-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {r.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* ═══ SECTION A: Visitor KPIs (GA4) ═══════════════════════ */}
-      {gaNotConfigured ? (
-        <Card className="border-dashed">
-          <CardContent className="p-6 text-center">
-            <Globe className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-            <p className="font-medium">Google Analytics not configured</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Set <code className="bg-muted px-1 rounded">GA4_PROPERTY_ID</code> and{' '}
-              <code className="bg-muted px-1 rounded">GA4_CREDENTIALS</code> env vars in Vercel to see visitor analytics.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            <KpiCard icon={Eye} label="Page Views" value={overview?.pageViews} loading={gaLoading} color="text-amber-600 bg-amber-600/10" />
-            <KpiCard icon={Users} label="Visitors" value={overview?.visitors} loading={gaLoading} color="text-blue-600 bg-blue-600/10" />
-            <KpiCard icon={Activity} label="Sessions" value={overview?.sessions} loading={gaLoading} color="text-green-600 bg-green-600/10" />
-            <KpiCard icon={Clock} label="Avg Duration" value={overview?.avgDuration} loading={gaLoading} color="text-purple-600 bg-purple-600/10" format="duration" />
-            <KpiCard icon={TrendingDown} label="Bounce Rate" value={overview?.bounceRate} loading={gaLoading} color="text-rose-600 bg-rose-600/10" format="percent" />
-          </div>
-
-          {/* ─── GA Charts Row 1: Pages + Sources ─────────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Top Pages */}
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">Top Pages</CardTitle>
-                <CardDescription>Most viewed pages</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {gaLoading ? <ChartSkeleton /> : pages.length === 0 ? <NoData /> : (
-                  <ChartContainer config={pagesChartConfig} className="h-[300px]">
-                    <BarChart data={pages} layout="vertical" margin={{ left: 100 }}>
-                      <CartesianGrid horizontal={false} />
-                      <XAxis type="number" />
-                      <YAxis type="category" dataKey="path" width={90} tick={{ fontSize: 11 }} />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="views" fill="var(--color-views)" radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ChartContainer>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Traffic Sources */}
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">Traffic Sources</CardTitle>
-                <CardDescription>Where visitors come from</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {gaLoading ? <ChartSkeleton /> : sources.length === 0 ? <NoData /> : (
-                  <ChartContainer config={sourcesGaConfig} className="h-[300px]">
-                    <PieChart>
-                      <Pie
-                        data={sources}
-                        dataKey="sessions"
-                        nameKey="source"
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={55}
-                        outerRadius={85}
-                        paddingAngle={3}
-                      >
-                        {sources.map((_, i) => (
-                          <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                        ))}
-                        <Label
-                          content={({ viewBox }) => {
-                            if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
-                              const total = sources.reduce((s, r) => s + r.sessions, 0);
-                              return (
-                                <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                                  <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-xl font-bold">{total.toLocaleString()}</tspan>
-                                  <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 18} className="fill-muted-foreground text-xs">sessions</tspan>
-                                </text>
-                              );
-                            }
-                          }}
-                        />
-                      </Pie>
-                      <ChartTooltip content={<ChartTooltipContent nameKey="source" />} />
-                    </PieChart>
-                  </ChartContainer>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* ─── GA Charts Row 2: Countries + Devices ─────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Countries */}
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">Top Countries</CardTitle>
-                <CardDescription>Visitor locations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {gaLoading ? <ChartSkeleton /> : countries.length === 0 ? <NoData /> : (
-                  <ChartContainer config={countriesChartConfig} className="h-[300px]">
-                    <BarChart data={countries} layout="vertical" margin={{ left: 100 }}>
-                      <CartesianGrid horizontal={false} />
-                      <XAxis type="number" />
-                      <YAxis type="category" dataKey="country" width={90} tick={{ fontSize: 11 }} />
-                      <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="sessions" fill="var(--color-sessions)" radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ChartContainer>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Devices */}
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-base">Devices</CardTitle>
-                <CardDescription>Mobile vs Desktop vs Tablet</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {gaLoading ? <ChartSkeleton /> : devices.length === 0 ? <NoData /> : (
-                  <ChartContainer config={devicesGaConfig} className="h-[300px]">
-                    <PieChart>
-                      <Pie
-                        data={devices}
-                        dataKey="sessions"
-                        nameKey="device"
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={55}
-                        outerRadius={85}
-                        paddingAngle={3}
-                      >
-                        {devices.map((_, i) => (
-                          <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                        ))}
-                        <Label
-                          content={({ viewBox }) => {
-                            if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
-                              const total = devices.reduce((s, d) => s + d.sessions, 0);
-                              return (
-                                <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                                  <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-xl font-bold">{total.toLocaleString()}</tspan>
-                                  <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 18} className="fill-muted-foreground text-xs">sessions</tspan>
-                                </text>
-                              );
-                            }
-                          }}
-                        />
-                      </Pie>
-                      <ChartTooltip content={<ChartTooltipContent nameKey="device" />} />
-                    </PieChart>
-                  </ChartContainer>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </>
-      )}
-
-      {/* ═══ SECTION D: Product KPIs ═════════════════════════════ */}
+      {/* ─── Header ─────────────────────────────────────────────── */}
       <div>
-        <h2 className="text-lg font-semibold mb-3">Product Catalog</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <StatCard icon={Package} label="Total Products" value={productStats.total.toLocaleString()} color="text-amber-600 bg-amber-600/10" />
-          <StatCard icon={Boxes} label="In Stock" value={productStats.inStockCount.toLocaleString()} color="text-green-600 bg-green-600/10" />
-          <StatCard icon={AlertTriangle} label="Low Stock" value={productStats.lowStockCount.toLocaleString()} color="text-red-600 bg-red-600/10" />
-          <StatCard icon={Percent} label="On Sale" value={productStats.onSaleCount.toLocaleString()} color="text-rose-600 bg-rose-600/10" />
-          <StatCard icon={Euro} label="Avg Price" value={`${productStats.avgPrice.toFixed(0)}€`} color="text-blue-600 bg-blue-600/10" />
-          <StatCard icon={FolderTree} label="Categories" value={categories.length.toLocaleString()} color="text-purple-600 bg-purple-600/10" />
-        </div>
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground mt-1">Product catalog overview</p>
       </div>
 
-      {/* ═══ SECTION E: Product Charts ════════════════════════════ */}
+      {/* ─── KPI Cards ──────────────────────────────────────────── */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <StatCard icon={Package} label="Total Products" value={stats.total.toLocaleString()} color="text-amber-600 bg-amber-600/10" />
+        <StatCard icon={Boxes} label="In Stock" value={stats.inStockCount.toLocaleString()} color="text-green-600 bg-green-600/10" />
+        <StatCard icon={AlertTriangle} label="Low Stock" value={stats.lowStockCount.toLocaleString()} color="text-red-600 bg-red-600/10" />
+        <StatCard icon={Percent} label="On Sale" value={stats.onSaleCount.toLocaleString()} color="text-rose-600 bg-rose-600/10" />
+        <StatCard icon={Euro} label="Avg Price" value={`${stats.avgPrice.toFixed(0)}€`} color="text-blue-600 bg-blue-600/10" />
+        <StatCard icon={FolderTree} label="Categories" value={categories.length.toLocaleString()} color="text-purple-600 bg-purple-600/10" />
+      </div>
+
+      {/* ─── Financial Strip ────────────────────────────────────── */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex flex-wrap gap-6 divide-x divide-border [&>*:first-child]:pl-0 [&>*]:pl-6">
+            <div>
+              <p className="text-xs text-muted-foreground">Inventory Value</p>
+              <p className="text-lg font-bold">{stats.inventoryValue.toLocaleString('el-GR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Liberta</p>
+              <p className="text-lg font-bold">{stats.libertaCount.toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Other</p>
+              <p className="text-lg font-bold">{stats.otherCount.toLocaleString()}</p>
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground">Out of Stock</p>
+              <p className="text-lg font-bold">{stats.outOfStockCount.toLocaleString()}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ─── Charts Row: Categories + Source ─────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Top Categories */}
         <Card className="lg:col-span-2">
           <CardHeader className="pb-2">
             <CardTitle className="text-base">Top Categories</CardTitle>
             <CardDescription>Product distribution across parent categories</CardDescription>
           </CardHeader>
           <CardContent>
-            {productStats.categoryDistribution.length === 0 ? <NoData /> : (
+            {stats.categoryDistribution.length === 0 ? <NoData /> : (
               <ChartContainer config={categoryChartConfig} className="h-[350px]">
-                <BarChart data={productStats.categoryDistribution} layout="vertical" margin={{ left: 120 }}>
+                <BarChart data={stats.categoryDistribution} layout="vertical" margin={{ left: 120 }}>
                   <CartesianGrid horizontal={false} />
                   <XAxis type="number" />
                   <YAxis type="category" dataKey="name" width={110} tick={{ fontSize: 11 }} />
@@ -420,7 +190,6 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* Source Breakdown */}
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">Product Sources</CardTitle>
@@ -430,7 +199,7 @@ export default function AdminDashboard() {
             <ChartContainer config={sourceChartConfig} className="h-[350px]">
               <PieChart>
                 <Pie
-                  data={productStats.sourceBreakdown}
+                  data={stats.sourceBreakdown}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
@@ -439,7 +208,7 @@ export default function AdminDashboard() {
                   outerRadius={90}
                   paddingAngle={3}
                 >
-                  {productStats.sourceBreakdown.map((_, i) => (
+                  {stats.sourceBreakdown.map((_, i) => (
                     <Cell key={i} fill={PIE_COLORS[i]} />
                   ))}
                   <Label
@@ -447,7 +216,7 @@ export default function AdminDashboard() {
                       if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
                         return (
                           <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-                            <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-2xl font-bold">{productStats.total.toLocaleString()}</tspan>
+                            <tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-2xl font-bold">{stats.total.toLocaleString()}</tspan>
                             <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 20} className="fill-muted-foreground text-xs">products</tspan>
                           </text>
                         );
@@ -462,7 +231,7 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* ═══ SECTION F: Tabbed Details ════════════════════════════ */}
+      {/* ─── Tabbed Details ──────────────────────────────────────── */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-base">Detailed Insights</CardTitle>
@@ -475,9 +244,8 @@ export default function AdminDashboard() {
               <TabsTrigger value="stock">Stock Health</TabsTrigger>
             </TabsList>
 
-            {/* Low Stock Table */}
             <TabsContent value="lowstock">
-              {productStats.lowStockProducts.length === 0 ? (
+              {stats.lowStockProducts.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">No low stock products.</p>
               ) : (
                 <ScrollArea className="h-[400px]">
@@ -491,7 +259,7 @@ export default function AdminDashboard() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {productStats.lowStockProducts.map(p => (
+                      {stats.lowStockProducts.map(p => (
                         <TableRow key={p.id}>
                           <TableCell className="font-medium max-w-[300px] truncate">{p.title}</TableCell>
                           <TableCell><Badge variant="outline" className="text-xs">{p.category}</Badge></TableCell>
@@ -505,10 +273,9 @@ export default function AdminDashboard() {
               )}
             </TabsContent>
 
-            {/* Price Distribution */}
             <TabsContent value="prices">
               <ChartContainer config={priceChartConfig} className="h-[350px]">
-                <AreaChart data={productStats.priceDistribution}>
+                <AreaChart data={stats.priceDistribution}>
                   <defs>
                     <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="var(--color-count)" stopOpacity={0.3} />
@@ -524,17 +291,16 @@ export default function AdminDashboard() {
               </ChartContainer>
             </TabsContent>
 
-            {/* Stock Health */}
             <TabsContent value="stock">
               <div className="space-y-4 max-w-xl">
-                {productStats.stockBuckets.map(b => (
+                {stats.stockBuckets.map(b => (
                   <div key={b.label} className="space-y-1">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">{b.label}</span>
                       <span className="font-medium">
                         {b.count.toLocaleString()}
                         <span className="text-muted-foreground ml-1">
-                          ({productStats.total > 0 ? Math.round((b.count / productStats.total) * 100) : 0}%)
+                          ({stats.total > 0 ? Math.round((b.count / stats.total) * 100) : 0}%)
                         </span>
                       </span>
                     </div>
@@ -542,7 +308,7 @@ export default function AdminDashboard() {
                       <div
                         className="h-full rounded-full transition-all"
                         style={{
-                          width: `${productStats.total > 0 ? (b.count / productStats.total) * 100 : 0}%`,
+                          width: `${stats.total > 0 ? (b.count / stats.total) * 100 : 0}%`,
                           backgroundColor: b.color,
                         }}
                       />
@@ -555,8 +321,8 @@ export default function AdminDashboard() {
         </CardContent>
       </Card>
 
-      {/* ═══ SECTION G: Quick Actions ═════════════════════════════ */}
-      <div className="grid sm:grid-cols-2 gap-4">
+      {/* ─── Quick Actions ───────────────────────────────────────── */}
+      <div className="grid sm:grid-cols-3 gap-4">
         <Card>
           <CardContent className="p-6">
             <h3 className="font-semibold mb-2">Other Products</h3>
@@ -575,59 +341,26 @@ export default function AdminDashboard() {
             </Button>
           </CardContent>
         </Card>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className="font-semibold">Microsoft Clarity</h3>
+              <BarChart3 className="h-4 w-4 text-blue-500" />
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">View heatmaps, session recordings, and visitor analytics.</p>
+            <Button asChild variant="outline" size="sm">
+              <a href="https://clarity.microsoft.com" target="_blank" rel="noopener noreferrer">
+                Open Clarity <ExternalLink className="h-4 w-4 ml-1" />
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 }
 
 // ─── Sub-components ──────────────────────────────────────────────
-
-function KpiCard({ icon: Icon, label, value, loading, color, format }: {
-  icon: React.ElementType;
-  label: string;
-  value: number | undefined;
-  loading: boolean;
-  color: string;
-  format?: 'duration' | 'percent';
-}) {
-  let display = '—';
-  if (value !== undefined) {
-    if (format === 'duration') {
-      const mins = Math.floor(value / 60);
-      const secs = Math.round(value % 60);
-      display = `${mins}m ${secs}s`;
-    } else if (format === 'percent') {
-      display = `${(value * 100).toFixed(1)}%`;
-    } else {
-      display = value.toLocaleString();
-    }
-  }
-
-  return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex items-center gap-3">
-          <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${color}`}>
-            <Icon className="h-5 w-5" />
-          </div>
-          <div className="min-w-0">
-            {loading ? (
-              <>
-                <Skeleton className="h-7 w-16 mb-1" />
-                <Skeleton className="h-3 w-12" />
-              </>
-            ) : (
-              <>
-                <p className="text-2xl font-bold tracking-tight">{display}</p>
-                <p className="text-xs text-muted-foreground truncate">{label}</p>
-              </>
-            )}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
 
 function StatCard({ icon: Icon, label, value, color }: {
   icon: React.ElementType;
@@ -649,20 +382,6 @@ function StatCard({ icon: Icon, label, value, color }: {
         </div>
       </CardContent>
     </Card>
-  );
-}
-
-function ChartSkeleton() {
-  return (
-    <div className="h-[300px] flex items-center justify-center">
-      <div className="space-y-3 w-full">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-4 w-1/2" />
-        <Skeleton className="h-4 w-2/3" />
-        <Skeleton className="h-4 w-1/3" />
-        <Skeleton className="h-4 w-3/5" />
-      </div>
-    </div>
   );
 }
 
