@@ -21,12 +21,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (username !== validUsername) {
-    return res.status(401).json({ error: 'Invalid credentials', debug: 'username mismatch', got: username, expected: validUsername });
+    return res.status(401).json({ error: 'Invalid credentials' });
   }
 
   const passwordValid = await bcrypt.compare(password || '', passwordHash);
   if (!passwordValid) {
-    return res.status(401).json({ error: 'Invalid credentials', debug: 'password mismatch', hashPrefix: passwordHash.substring(0, 7) });
+    return res.status(401).json({ error: 'Invalid credentials' });
   }
 
   const token = jwt.sign(
