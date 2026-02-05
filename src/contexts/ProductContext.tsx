@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
-import { Product, Category, parseProductsFromCSV, extractCategories } from '@/lib/productParser';
+import { Product, Category, parseProductsFromJSON, extractCategories } from '@/lib/productParser';
 
 interface ProductContextType {
   products: Product[];
@@ -21,15 +21,35 @@ export function ProductProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function loadProducts() {
       try {
-        const response = await fetch('/data/products.csv?t=' + new Date().getTime());
-        if (!response.ok) {
-          throw new Error('Failed to load products');
-        }
-        const csvText = await response.text();
-        const parsedProducts = parseProductsFromCSV(csvText);
-        const extractedCategories = extractCategories(parsedProducts);
+        const cacheBust = `?t=${Date.now()}`;
 
-        setProducts(parsedProducts);
+        const [libertaResponse, otherResponse] = await Promise.all([
+          fetch(`/data/liberta-products.json${cacheBust}`),
+          fetch(`/data/other-products.json${cacheBust}`),
+        ]);
+
+        let libertaProducts: Product[] = [];
+        let otherProducts: Product[] = [];
+
+        if (libertaResponse.ok) {
+          const libertaJson = await libertaResponse.json();
+          libertaProducts = parseProductsFromJSON(libertaJson);
+        }
+
+        if (otherResponse.ok) {
+          const otherJson = await otherResponse.json();
+          otherProducts = parseProductsFromJSON(otherJson);
+        }
+
+        // Merge both sources, dedup by ID
+        const productMap = new Map<string, Product>();
+        for (const p of libertaProducts) productMap.set(p.id, p);
+        for (const p of otherProducts) productMap.set(p.id, p);
+        const allProducts = Array.from(productMap.values());
+
+        const extractedCategories = extractCategories(allProducts);
+
+        setProducts(allProducts);
         setCategories(extractedCategories);
         setIsLoading(false);
       } catch (err) {

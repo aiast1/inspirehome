@@ -1,0 +1,11 @@
+{
+  "name": "inspirehome-sync",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "node src/sync-liberta.mjs"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.3.0"
+  }
+}

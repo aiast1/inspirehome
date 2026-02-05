@@ -1,0 +1,7 @@
+{
+  "default": { "multiplier": 1.0, "roundTo": 2 },
+  "categoryOverrides": {
+    "Φωτιστικά": { "multiplier": 1.05, "roundTo": 2 }
+  },
+  "saleRules": { "useDiscountedPrice": true }
+}

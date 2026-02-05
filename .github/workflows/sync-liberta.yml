@@ -1,0 +1,42 @@
+name: Sync Liberta Products
+
+on:
+  schedule:
+    - cron: '0 5 * * *' # Daily at 05:00 UTC (08:00 Athens time)
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install sync dependencies
+        working-directory: ./sync
+        run: npm ci
+
+      - name: Run sync script
+        working-directory: ./sync
+        env:
+          LIBERTA_FEED_URL: ${{ secrets.LIBERTA_FEED_URL }}
+        run: node src/sync-liberta.mjs
+
+      - name: Commit and push if changed
+        run: |
+          git diff --quiet public/data/liberta-products.json sync/data/last-sync.json 2>/dev/null && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/liberta-products.json sync/data/last-sync.json
+          git commit -m "chore: sync Liberta products [automated]"
+          git push
