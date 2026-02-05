@@ -23,13 +23,15 @@ export function ProductProvider({ children }: { children: ReactNode }) {
       try {
         const cacheBust = `?t=${Date.now()}`;
 
-        const [libertaResponse, otherResponse] = await Promise.all([
+        const [libertaResponse, otherResponse, overridesResponse] = await Promise.all([
           fetch(`/data/liberta-products.json${cacheBust}`),
           fetch(`/data/other-products.json${cacheBust}`),
+          fetch(`/data/liberta-overrides.json${cacheBust}`),
         ]);
 
         let libertaProducts: Product[] = [];
         let otherProducts: Product[] = [];
+        let overrides: Record<string, any> = {};
 
         if (libertaResponse.ok) {
           const libertaJson = await libertaResponse.json();
@@ -40,6 +42,25 @@ export function ProductProvider({ children }: { children: ReactNode }) {
           const otherJson = await otherResponse.json();
           otherProducts = parseProductsFromJSON(otherJson);
         }
+
+        if (overridesResponse.ok) {
+          overrides = await overridesResponse.json();
+        }
+
+        // Apply overrides to Liberta products
+        libertaProducts = libertaProducts
+          .map(product => {
+            const override = overrides[product.id];
+            if (!override) return product;
+            if (override.hidden) return null;
+            return {
+              ...product,
+              ...(override.price !== undefined ? { price: override.price } : {}),
+              ...(override.salePrice !== undefined ? { salePrice: override.salePrice } : {}),
+              ...(override.categories !== undefined ? { categories: override.categories } : {}),
+            };
+          })
+          .filter((p): p is Product => p !== null);
 
         // Merge both sources, dedup by ID
         const productMap = new Map<string, Product>();
