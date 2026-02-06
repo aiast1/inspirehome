@@ -27,6 +27,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminLiberta from "./pages/admin/AdminLiberta";
 import AdminShop from "./pages/admin/AdminShop";
+import AdminSync from "./pages/admin/AdminSync";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
                         <Route path="products" element={<AdminProducts />} />
                         <Route path="liberta" element={<AdminLiberta />} />
                         <Route path="shop" element={<AdminShop />} />
+                        <Route path="sync" element={<AdminSync />} />
                       </Routes>
                     </AdminLayout>
                   </AdminRoute>

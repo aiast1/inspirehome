@@ -13,6 +13,7 @@ const PROJECT_ROOT = resolve(ROOT, '..');
 const MARKUP_PATH = resolve(ROOT, 'config/markup.json');
 const CATEGORY_MAP_PATH = resolve(ROOT, 'config/category-map.json');
 const LAST_SYNC_PATH = resolve(ROOT, 'data/last-sync.json');
+const SYNC_HISTORY_PATH = resolve(PROJECT_ROOT, 'public/data/sync-history.json');
 const OUTPUT_PATH = resolve(PROJECT_ROOT, 'public/data/liberta-products.json');
 
 function loadJson(path) {
@@ -92,8 +93,9 @@ async function main() {
   writeFileSync(OUTPUT_PATH, JSON.stringify(products, null, 2), 'utf-8');
 
   // Write sync state
+  const now = new Date().toISOString();
   const syncState = {
-    lastSync: new Date().toISOString(),
+    lastSync: now,
     productCount: products.length,
     productHash: newHashes,
     delta: {
@@ -101,9 +103,33 @@ async function main() {
       removed: delta.removed.length,
       changed: delta.changed.length,
       unchanged: delta.unchanged,
+      newIds: delta.new.slice(0, 50),
+      removedIds: delta.removed.slice(0, 50),
+      changedIds: delta.changed.slice(0, 50),
     },
   };
   writeFileSync(LAST_SYNC_PATH, JSON.stringify(syncState, null, 2), 'utf-8');
+
+  // Append to sync history (keep last 90 entries)
+  let history = [];
+  if (existsSync(SYNC_HISTORY_PATH)) {
+    try { history = JSON.parse(readFileSync(SYNC_HISTORY_PATH, 'utf-8')); } catch {}
+  }
+  history.unshift({
+    timestamp: now,
+    productCount: products.length,
+    delta: {
+      new: delta.new.length,
+      removed: delta.removed.length,
+      changed: delta.changed.length,
+      unchanged: delta.unchanged,
+    },
+    sampleNewIds: delta.new.slice(0, 10),
+    sampleRemovedIds: delta.removed.slice(0, 10),
+    sampleChangedIds: delta.changed.slice(0, 10),
+  });
+  if (history.length > 90) history = history.slice(0, 90);
+  writeFileSync(SYNC_HISTORY_PATH, JSON.stringify(history, null, 2), 'utf-8');
 
   console.log('Sync complete!');
 }

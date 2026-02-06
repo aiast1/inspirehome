@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Package, Database, ShoppingCart, ExternalLink, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Package, Database, ShoppingCart, RefreshCw, ExternalLink, LogOut, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
@@ -9,6 +9,7 @@ const navItems = [
   { label: 'Other Products', path: '/admin/products', icon: Package },
   { label: 'Liberta Products', path: '/admin/liberta', icon: Database },
   { label: 'Shop', path: '/admin/shop', icon: ShoppingCart },
+  { label: 'Sync History', path: '/admin/sync', icon: RefreshCw },
 ];
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
