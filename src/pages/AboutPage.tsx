@@ -1,12 +1,22 @@
 import { Link } from 'react-router-dom';
 import { ChevronRight, Award, Users, Heart, Truck, Sparkles, TrendingUp, ShieldCheck, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { SEO, breadcrumbSchema } from '@/components/SEO';
 import heroImage from '@/assets/hero-living-room.jpg';
 import furnitureImage from '@/assets/category-furniture.jpg';
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen pt-24 pb-16 bg-background overflow-hidden">
+      <SEO
+        title="Σχετικά με εμάς"
+        description="Μάθετε για το InspireHome - το κατάστημα επίπλων και διακόσμησης στη Θεσσαλονίκη. Ποιοτικά έπιπλα, εξυπηρέτηση πελατών και εμπειρία που κάνει τη διαφορά."
+        canonical="/about"
+        jsonLd={breadcrumbSchema([
+          { name: 'Αρχική', url: '/' },
+          { name: 'Σχετικά με εμάς' },
+        ])}
+      />
 
       {/* Background Blobs for specific vibrancy */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
@@ -16,7 +26,7 @@ export default function AboutPage() {
 
       <div className="container-xl relative z-10">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-12 animate-fade-in">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground mb-12 animate-fade-in">
           <Link to="/" className="hover:text-foreground transition-colors">
             Αρχική
           </Link>

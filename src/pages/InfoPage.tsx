@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { ChevronRight, Truck, CreditCard, RotateCcw, Shield, FileText } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { SEO, breadcrumbSchema } from '@/components/SEO';
 
 export default function InfoPage() {
     const [searchParams] = useSearchParams();
@@ -18,9 +19,18 @@ export default function InfoPage() {
 
     return (
         <div className="min-h-screen pt-24 pb-16 bg-background">
+            <SEO
+                title="Χρήσιμες Πληροφορίες"
+                description="Αποστολή, τρόποι πληρωμής, πολιτική επιστροφών, όροι χρήσης και πολιτική απορρήτου στο InspireHome. Δωρεάν αποστολή σε παραγγελίες άνω των €100."
+                canonical="/info"
+                jsonLd={breadcrumbSchema([
+                    { name: 'Αρχική', url: '/' },
+                    { name: 'Χρήσιμες Πληροφορίες' },
+                ])}
+            />
             <div className="container-xl">
                 {/* Breadcrumb */}
-                <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-12">
+                <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground mb-12">
                     <Link to="/" className="hover:text-foreground transition-colors">
                         Αρχική
                     </Link>

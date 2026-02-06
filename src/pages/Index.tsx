@@ -4,6 +4,7 @@ import { ArrowRight, Truck, Shield, Headphones, RefreshCw, Sparkles } from 'luci
 import { Button } from '@/components/ui/button';
 import { ProductGrid } from '@/components/products/ProductGrid';
 import { useProducts } from '@/contexts/ProductContext';
+import { SEO, organizationSchema, searchActionSchema } from '@/components/SEO';
 import heroImage from '@/assets/hero-living-room.jpg';
 import categoryFurniture from '@/assets/category-furniture.jpg';
 import categoryDecor from '@/assets/category-decor.jpg';
@@ -22,6 +23,11 @@ export default function Index() {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        canonical="/"
+        description="Ανακαλύψτε μοναδικά έπιπλα και διακοσμητικά στο InspireHome. Καναπέδες, πολυθρόνες, τραπέζια, κρεβάτια, φωτιστικά και αξεσουάρ για κάθε χώρο του σπιτιού σας στη Θεσσαλονίκη."
+        jsonLd={[organizationSchema(), searchActionSchema()]}
+      />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center">
         {/* Background Image */}

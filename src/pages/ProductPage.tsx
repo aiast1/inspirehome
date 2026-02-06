@@ -7,6 +7,7 @@ import { useProducts } from '@/contexts/ProductContext';
 import { useCart } from '@/contexts/CartContext';
 import { getSimilarProducts } from '@/lib/productParser';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
+import { SEO, productSchema, breadcrumbSchema } from '@/components/SEO';
 
 export default function ProductPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -67,11 +68,30 @@ export default function ProductPage() {
   const displayPrice = product.salePrice || product.price;
   const mainCategory = product.categories[0]?.split('>')[0]?.trim() || 'Products';
 
+  const seoDescription = product.description
+    ? product.description.slice(0, 160)
+    : `${product.title} - Αγοράστε online στο InspireHome. €${displayPrice.toFixed(2)}. Δωρεάν αποστολή σε παραγγελίες άνω των €100.`;
+
   return (
     <div className="min-h-screen pt-24 pb-16">
+      <SEO
+        title={product.title}
+        description={seoDescription}
+        canonical={`/product/${product.slug}`}
+        image={product.images[0] || undefined}
+        type="product"
+        jsonLd={[
+          productSchema(product),
+          breadcrumbSchema([
+            { name: 'Αρχική', url: '/' },
+            { name: mainCategory, url: `/category/${mainCategory.toLowerCase()}` },
+            { name: product.title },
+          ]),
+        ]}
+      />
       <div className="container-xl">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8 flex-wrap">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground mb-8 flex-wrap">
           <Link to="/" className="hover:text-foreground transition-colors">
             Home
           </Link>

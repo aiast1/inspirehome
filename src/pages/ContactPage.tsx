@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import categoryFurniture from '@/assets/category-furniture.jpg'; // Using this as the hero/side image
+import { SEO, breadcrumbSchema } from '@/components/SEO';
+import categoryFurniture from '@/assets/category-furniture.jpg';
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,9 +79,18 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-16 bg-background">
+      <SEO
+        title="Επικοινωνία"
+        description="Επικοινωνήστε με το InspireHome. Τηλέφωνο, email, φόρμα επικοινωνίας και διεύθυνση καταστήματος στη Θεσσαλονίκη. Είμαστε εδώ για εσάς!"
+        canonical="/contact"
+        jsonLd={breadcrumbSchema([
+          { name: 'Αρχική', url: '/' },
+          { name: 'Επικοινωνία' },
+        ])}
+      />
       <div className="container-xl">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-12">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground mb-12">
           <Link to="/" className="hover:text-foreground transition-colors">
             Αρχική
           </Link>

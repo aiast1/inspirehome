@@ -25,6 +25,7 @@ import heroKids from '@/assets/hero_kids_1769277174967.png';
 
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import { Checkbox } from '@/components/ui/checkbox';
+import { SEO, collectionPageSchema, breadcrumbSchema } from '@/components/SEO';
 
 export default function CategoryPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -366,9 +367,21 @@ export default function CategoryPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-16">
+      <SEO
+        title={`${categoryName} - Έπιπλα & Διακόσμηση`}
+        description={`${heroDetails.description} Βρείτε ${filteredProducts.length} προϊόντα στην κατηγορία ${categoryName} στο InspireHome.`}
+        canonical={`/category/${slug}`}
+        jsonLd={[
+          collectionPageSchema(categoryName, `/category/${slug}`, heroDetails.description, filteredProducts.length),
+          breadcrumbSchema([
+            { name: 'Αρχική', url: '/' },
+            { name: categoryName },
+          ]),
+        ]}
+      />
       <div className="container-xl">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
           <Link to="/" className="hover:text-foreground transition-colors">
             Αρχική
           </Link>

@@ -1,0 +1,106 @@
+# InspireHome — Complete Store Information
+
+> InspireHome (inspirehome.gr) is a Greek online furniture and home decor e-commerce store, operated by Καμπλατζής (Kaplantzis), based in Thessaloniki, Greece.
+
+## Store Overview
+
+InspireHome provides a comprehensive range of furniture and home decoration products. Our mission is to help customers transform their living spaces into inspiring environments with quality furniture at competitive prices.
+
+### Value Propositions
+1. **Free Shipping** — On all orders over €100 within Greece
+2. **Quality Guarantee** — 2-year warranty on all furniture products
+3. **Easy Returns** — 14-day hassle-free return policy
+4. **Customer Support** — Available Monday through Saturday
+
+## Complete Product Categories
+
+### Καθιστικό (Living Room)
+Browse our living room collection including modern sofas, comfortable armchairs, elegant coffee tables, functional TV units, and decorative rugs. Our living room furniture combines contemporary design with lasting comfort.
+- URL: https://inspirehome.gr/category/καθιστικό
+
+### Υπνοδωμάτιο (Bedroom)
+Create your dream bedroom with our selection of beds, mattresses, wardrobes, nightstands, and dressers. From minimalist to classic styles, find furniture that ensures restful sleep and organized living.
+- URL: https://inspirehome.gr/category/υπνοδωμάτιο
+
+### Τραπεζαρία (Dining Room)
+Gather around beautiful dining tables with matching chairs. Our dining collection includes sideboards, bar stools, and display cabinets to complete your dining experience.
+- URL: https://inspirehome.gr/category/τραπεζαρία
+
+### Γραφείο (Office)
+Work productively with ergonomic office furniture. Browse desks, adjustable office chairs, bookshelves, and storage solutions designed for both home offices and professional spaces.
+- URL: https://inspirehome.gr/category/γραφείο
+
+### Παιδικό (Kids)
+Safe and playful furniture for children's rooms. Our kids' collection includes beds, study desks, storage solutions, and fun accessories designed with safety and creativity in mind.
+- URL: https://inspirehome.gr/category/παιδικό
+
+### Αποθήκευση (Storage)
+Maximize your space with our storage solutions. From shelving units and cabinets to closet organizers, find smart ways to keep your home tidy and organized.
+- URL: https://inspirehome.gr/category/αποθήκευση
+
+### Εξωτερικού Χώρου (Outdoor)
+Enjoy your garden, balcony, or terrace with weather-resistant outdoor furniture. Browse patio dining sets, lounge chairs, garden sofas, and outdoor lighting.
+- URL: https://inspirehome.gr/category/εξωτερικού-χώρου
+
+### Διακόσμηση (Decor)
+Add the finishing touches to your home. Our decor collection includes lighting fixtures, mirrors, vases, cushions, wall art, and decorative accessories.
+- URL: https://inspirehome.gr/category/διακόσμηση
+
+## Shipping & Delivery
+
+- **Standard delivery:** 3-5 business days within mainland Greece
+- **Island delivery:** 4-7 business days
+- **Free shipping** on orders over €100
+- Delivery by trusted courier partners with tracking
+- Large furniture items include assembly instructions
+
+## Payment Methods
+
+- Credit/Debit cards (Visa, Mastercard)
+- Bank transfer
+- Cash on delivery (for eligible orders)
+
+## Returns & Warranty
+
+- **14-day return window** from date of delivery
+- Products must be in original condition and packaging
+- Return shipping costs are the customer's responsibility (except for defective items)
+- **2-year manufacturer warranty** on all furniture against defects
+- Damaged/defective items replaced free of charge with photo evidence
+
+## Frequently Asked Questions
+
+**Q: How do I place an order?**
+A: Select your products, add them to your cart, and follow the checkout process. You can order as a guest or create an account.
+
+**Q: Can I cancel my order?**
+A: Yes, you can cancel before shipping. Contact us by phone or email immediately.
+
+**Q: What are the shipping costs?**
+A: Shipping is calculated based on weight and destination. Orders over €100 ship free within Greece.
+
+**Q: How long does delivery take?**
+A: Usually 3-5 business days. Islands may take 1-2 additional days.
+
+**Q: Can I return a product?**
+A: Yes, within 14 days of delivery, in original condition. Return shipping is the customer's responsibility unless the item is defective.
+
+**Q: What warranty do products have?**
+A: All furniture comes with a 2-year warranty covering manufacturing defects.
+
+**Q: What if I receive a damaged product?**
+A: Contact us immediately with photos. We'll arrange a free replacement.
+
+## Contact & Location
+
+- **Phone:** +30 2310 000 000
+- **Email:** info@inspirehome.gr
+- **Physical Store:** Εθνικής Αμύνης 15, Θεσσαλονίκη 54621, Greece
+- **Business Hours:** Mon-Fri 09:00-20:00, Sat 10:00-18:00, Sun Closed
+- **Facebook:** https://www.facebook.com/inspire.home.kaplantzis/
+
+## Data Access
+
+- **Product Catalog (JSON):** https://inspirehome.gr/data/liberta-products.json
+- **Sitemap (XML):** https://inspirehome.gr/api/sitemap.xml
+- **robots.txt:** https://inspirehome.gr/robots.txt

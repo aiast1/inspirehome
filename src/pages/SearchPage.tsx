@@ -6,6 +6,7 @@ import { ProductGrid } from '@/components/products/ProductGrid';
 import { useProducts } from '@/contexts/ProductContext';
 import { searchProducts } from '@/lib/productParser';
 import { PriceRangeFilter } from '@/components/filters/PriceRangeFilter';
+import { SEO } from '@/components/SEO';
 import {
   Select,
   SelectContent,
@@ -57,9 +58,14 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-16">
+      <SEO
+        title={query ? `Αναζήτηση: ${query}` : 'Αναζήτηση'}
+        description={`Αποτελέσματα αναζήτησης${query ? ` για "${query}"` : ''} στο InspireHome.`}
+        noindex
+      />
       <div className="container-xl">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
           <Link to="/" className="hover:text-foreground transition-colors">
             Αρχική
           </Link>

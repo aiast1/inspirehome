@@ -3,55 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Default title/description (overridden per-page by react-helmet-async) -->
     <title>InspireHome | Έπιπλα & Διακόσμηση Σπιτιού</title>
     <meta name="description" content="Ανακαλύψτε μοναδικά έπιπλα και διακοσμητικά στο InspireHome. Καναπέδες, πολυθρόνες, τραπέζια, φωτιστικά και αξεσουάρ για κάθε χώρο του σπιτιού σας." />
     <meta name="author" content="InspireHome" />
-    <meta name="keywords" content="έπιπλα, διακόσμηση, σπίτι, καναπέδες, πολυθρόνες, τραπέζια, φωτιστικά, Ελλάδα" />
-    
+
+    <!-- Geo & Language signals for local SEO -->
+    <meta name="geo.region" content="GR-B" />
+    <meta name="geo.placename" content="Thessaloniki" />
+    <meta name="geo.position" content="40.6401;22.9444" />
+    <meta name="ICBM" content="40.6401, 22.9444" />
+    <meta name="language" content="Greek" />
+    <meta http-equiv="content-language" content="el" />
+
     <link rel="canonical" href="https://inspirehome.gr" />
-    
+
+    <!-- Open Graph defaults (overridden per-page) -->
     <meta property="og:title" content="InspireHome | Έπιπλα & Διακόσμηση Σπιτιού" />
     <meta property="og:description" content="Ανακαλύψτε μοναδικά έπιπλα και διακοσμητικά που θα μετατρέψουν το σπίτι σας σε έναν χώρο έμπνευσης." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://inspirehome.gr" />
     <meta property="og:image" content="https://inspirehome.gr/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="el_GR" />
     <meta property="og:site_name" content="InspireHome" />
 
+    <!-- Twitter Card defaults -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="InspireHome | Έπιπλα & Διακόσμηση" />
     <meta name="twitter:description" content="Ανακαλύψτε μοναδικά έπιπλα και διακοσμητικά για κάθε χώρο." />
     <meta name="twitter:image" content="https://inspirehome.gr/og-image.jpg" />
-    
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <!-- Microsoft Clarity — replace vcukuxqvgf with your project ID -->
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://www.clarity.ms" crossorigin />
+
+    <!-- Microsoft Clarity -->
     <script type="text/javascript">
       (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
       })(window,document,"clarity","script","vcukuxqvgf");
-    </script>
-    
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FurnitureStore",
-      "name": "InspireHome",
-      "description": "Κατάστημα επίπλων και διακόσμησης σπιτιού",
-      "url": "https://inspirehome.gr",
-      "telephone": "+30 2310 000 000",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Εθνικής Αμύνης 15",
-        "addressLocality": "Θεσσαλονίκη",
-        "postalCode": "54621",
-        "addressCountry": "GR"
-      },
-      "openingHours": ["Mo-Fr 09:00-20:00", "Sa 10:00-18:00"],
-      "priceRange": "€€"
-    }
     </script>
   </head>
 

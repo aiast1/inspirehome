@@ -6,6 +6,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SEO, faqSchema, breadcrumbSchema } from '@/components/SEO';
 
 export default function FaqPage() {
     const faqs = [
@@ -35,11 +36,25 @@ export default function FaqPage() {
         }
     ];
 
+    const allFaqItems = faqs.flatMap(s => s.items.map(i => ({ question: i.q, answer: i.a })));
+
     return (
         <div className="min-h-screen pt-24 pb-16 bg-background">
+            <SEO
+                title="Συχνές Ερωτήσεις (FAQ)"
+                description="Απαντήσεις στις πιο συχνές ερωτήσεις για παραγγελίες, αποστολή, επιστροφές και εγγύηση στο InspireHome. Μάθετε τα πάντα πριν αγοράσετε."
+                canonical="/faq"
+                jsonLd={[
+                    faqSchema(allFaqItems),
+                    breadcrumbSchema([
+                        { name: 'Αρχική', url: '/' },
+                        { name: 'Συχνές Ερωτήσεις' },
+                    ]),
+                ]}
+            />
             <div className="container-xl">
                 {/* Breadcrumb */}
-                <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-12">
+                <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground mb-12">
                     <Link to="/" className="hover:text-foreground transition-colors">
                         Αρχική
                     </Link>

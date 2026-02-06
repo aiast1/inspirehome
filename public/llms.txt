@@ -1,0 +1,62 @@
+# InspireHome — Furniture & Home Decor Store
+
+> InspireHome (inspirehome.gr) is a Greek online furniture and home decor store based in Thessaloniki, Greece. We sell sofas, armchairs, tables, beds, lighting, storage furniture, office furniture, outdoor furniture, children's furniture, and decorative items.
+
+## About
+
+InspireHome offers a curated selection of high-quality furniture and home decoration products for every room of the house. Our catalog includes over 5,000 products sourced from top European suppliers.
+
+- **Location:** Thessaloniki, Greece (Εθνικής Αμύνης 15, 54621)
+- **Languages:** Greek (primary), English
+- **Currency:** EUR (€)
+- **Shipping:** Free shipping on orders over €100 within Greece
+- **Returns:** 14-day return policy
+- **Warranty:** 2-year warranty on all furniture
+- **Business hours:** Mon-Fri 09:00-20:00, Sat 10:00-18:00
+
+## Product Categories
+
+- **Καθιστικό (Living Room):** Sofas, armchairs, coffee tables, TV stands, rugs
+- **Υπνοδωμάτιο (Bedroom):** Beds, mattresses, wardrobes, nightstands, dressers
+- **Τραπεζαρία (Dining Room):** Dining tables, chairs, sideboards, bar stools
+- **Γραφείο (Office):** Desks, office chairs, bookshelves, file cabinets
+- **Παιδικό (Kids):** Children's beds, desks, storage, playroom furniture
+- **Αποθήκευση (Storage):** Shelving units, cabinets, organizers
+- **Εξωτερικού Χώρου (Outdoor):** Garden furniture, patio sets, outdoor lighting
+- **Διακόσμηση (Decor):** Lighting, mirrors, vases, cushions, wall art
+
+## Key Pages
+
+- Homepage: https://inspirehome.gr/
+- About Us: https://inspirehome.gr/about
+- Contact: https://inspirehome.gr/contact
+- FAQ: https://inspirehome.gr/faq
+- Shipping & Policies: https://inspirehome.gr/info
+- Product Catalog (JSON): https://inspirehome.gr/data/liberta-products.json
+
+## Structured Data
+
+Every product page includes schema.org Product structured data with:
+- Product name, description, images
+- Price and sale price in EUR
+- Availability (InStock / OutOfStock)
+- Shipping details (free within Greece)
+- Return policy (14 days)
+- Color, material, dimensions when available
+
+The FAQ page includes FAQPage schema for rich snippet eligibility.
+The site includes Organization schema (FurnitureStore type) with address and business hours.
+
+## Contact Information
+
+- **Phone:** +30 2310 000 000
+- **Email:** info@inspirehome.gr
+- **Address:** Εθνικής Αμύνης 15, Θεσσαλονίκη 54621, Greece
+- **Facebook:** https://www.facebook.com/inspire.home.kaplantzis/
+
+## Technical Details
+
+- Single-page application (React) with client-side routing
+- Product data available as JSON at /data/liberta-products.json
+- Dynamic XML sitemap at /api/sitemap.xml
+- Microsoft Clarity for analytics
